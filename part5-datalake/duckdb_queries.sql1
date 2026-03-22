@@ -1,0 +1,5 @@
+FROM read_csv_auto('datasets/customers.csv') c
+JOIN read_csv_auto('datasets/orders_flat.csv') o
+ON c.customer_id = o.customer_id
+JOIN read_parquet('datasets/products.parquet') p
+ON o.product_id = p.product_id
