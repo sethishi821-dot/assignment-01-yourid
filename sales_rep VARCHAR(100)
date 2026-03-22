@@ -1,0 +1,66 @@
+-- =====================================
+-- Q1: Customers from Mumbai with total order value
+-- =====================================
+SELECT 
+    Customers.customer_id,
+    Customers.name,
+    SUM(Orders.quantity * Products.price) AS total_order_value
+FROM Customers
+JOIN Orders 
+ON Customers.customer_id = Orders.customer_id
+JOIN Products 
+ON Orders.product_id = Products.product_id
+WHERE Customers.city = 'Mumbai'
+GROUP BY Customers.customer_id, Customers.name;
+
+
+-- =====================================
+-- Q2: Top 3 products by total quantity sold
+-- =====================================
+SELECT 
+    Products.product_id,
+    Products.product_name,
+    SUM(Orders.quantity) AS total_quantity_sold
+FROM Orders
+JOIN Products 
+ON Orders.product_id = Products.product_id
+GROUP BY Products.product_id, Products.product_name
+ORDER BY total_quantity_sold DESC
+LIMIT 3;
+
+
+-- =====================================
+-- Q3: Sales reps and number of unique customers handled
+-- (Assuming Orders table has sales_rep column)
+-- =====================================
+SELECT 
+    Orders.sales_rep,
+    COUNT(DISTINCT Orders.customer_id) AS unique_customers
+FROM Orders
+GROUP BY Orders.sales_rep;
+
+
+-- =====================================
+-- Q4: Orders where total value > 10000
+-- =====================================
+SELECT 
+    Orders.order_id,
+    SUM(Orders.quantity * Products.price) AS total_value
+FROM Orders
+JOIN Products 
+ON Orders.product_id = Products.product_id
+GROUP BY Orders.order_id
+HAVING total_value > 10000
+ORDER BY total_value DESC;
+
+
+-- =====================================
+-- Q5: Products never ordered
+-- =====================================
+SELECT 
+    Products.product_id,
+    Products.product_name
+FROM Products
+LEFT JOIN Orders 
+ON Products.product_id = Orders.product_id
+WHERE Orders.product_id IS NULL;
